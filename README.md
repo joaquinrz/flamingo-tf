@@ -2,6 +2,8 @@
 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
+- Session @ GitOpsCon Europe 2023 Virtual: [<https://sched.co/1Unjs>]([https://sched.co/1HyXe](https://sched.co/1Unjs))
+
 ## Overview
 
 The landscape of Kubernetes and containerized applications has evolved rapidly in recent years, demanding innovative solutions to manage and orchestrate deployments seamlessly. Flamingo, the Flux subsystem for ArgoCD, represents a powerful integration of these two GitOps titans, supercharging your workflows. This dynamic duo creates a seamless and effective GitOps-driven platform for managing Kubernetes applications and infrastructure. This repository will guide you step-by-step on how to get started with Flamingo and provide an example of how we can integrate Flamingo with the Weave GitOps Terraform Controller. Hope you enjoy this content!
