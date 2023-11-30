@@ -19,7 +19,7 @@ brew install kind
 # Install Flux CLI 
 brew install fluxcd/tap/flux
 
-# install Flamingo CLI
+# Install Flamingo CLI
 brew install flux-subsystem-argo/tap/flamingo
 
 ```
@@ -31,10 +31,10 @@ brew install flux-subsystem-argo/tap/flamingo
 # Create a kind Cluster
 kind create cluster --name flamingo-demo
 
-# Install Flux Controllers (note: the ideal way to install flux using true GitOps will be using 'flux bootstrap', but in this case we are using 'flux install' to simplify the process) 
+# Install Flux Controllers (note: the recommended approach to install flux using GitOps is using 'flux bootstrap', but in this case we are using 'flux install' to simplify the process) 
 flux install
 
-# Install Flamingo
+# Install Flamingo (additionally, you can also add --export flag to generate the yaml files and push that to git)
 flamingo install
 
 # Verify our pods are running correctly
@@ -42,9 +42,9 @@ kubectl get pods -A
 
 ```
 
-## Step 3: Install Terraform Controller CRDs
+## Step 3: Install the Terraform Controller
 
-The Weave GitOps Terraform Controller is a reliable controller for Flux to reconcile Terraform resources in the GitOps way. On the next steps we will be installing the controller CRDs so that we can then deploy our terraform resources.
+The Weave GitOps Terraform Controller is a reliable controller for Flux to reconcile Terraform resources in the GitOps way. On the next steps we will be installing the controller so that we can then deploy our terraform resources.
 
 ``` bash
 # Add tf-controller helm repository
@@ -62,7 +62,7 @@ kubectl get pods -n flux-system
 ## Step 4: Access Flamingo UI
 
 ``` bash
-# Like a normal Argo CD instance, please firstly obtain the initial password by running the following command to login. The default username is admin.
+# Like a normal Argo CD instance, let's obtain the initial password by running the following command to login. The default username is admin.
 flamingo show-init-password
 
 # Portforward to http://localhost:8080
@@ -70,9 +70,11 @@ kubectl -n argocd port-forward svc/argocd-server 8080:443
 
 ```
 
+Access your UI [here](http://localhost:8080).
+
 ## Step 5: Deploy our Terraform file
 
-We will install a simple hello world Terraform file. This hello world Terraform is this Git repository and contains everything we need.
+We will apply a simple hello world Terraform file. This file is located in this Git repository under the terraform folder and contains everything we need.
 
 On the Flamingo UI, create an App to manage our Terraform resource with Flux Subsystem for Argo. Please use the following configuration for the new App (helloworld)
 
@@ -92,16 +94,24 @@ Cluster URL: https://kubernetes.default.svc
 Namespace: dev
 ```
 
-After create the App, press Sync button once and wait. You could also press Refresh to see if the graph already there. If everything is correct, you would get something like the following screenshot, with a nice Terraform icon!!
+After creating the App, press the Sync button once and wait. You could also press Refresh to see if the graph is already there. If everything is correct, you should see the resources with a nice Terraform icon!
 
-Note: this example was taken from [here](Note: Th https://flux-subsystem-argo.github.io/website/tutorials/terraform/). Please reference it for further details and examples.
+> After the app is deployed, this will take no more than 5 minutes for the Terraform resources to be planned and applied
 
-## Step 6: Install some apps using the Flamingo CLI
+Verify that our secret was created with the output by running the following command:
+
+```bash
+kubectl -n dev get secret helloworld-outputs -o jsonpath="{.data.hello_world}" | base64 -d; echo
+```
+
+Note: this example was taken from [here](https://flux-subsystem-argo.github.io/website/tutorials/terraform/). Please reference it for further details and examples.
+
+## Step 6: Install podinfo using the Flamingo CLI
 
 ```bash
 kubectl apply -f deploy/podinfo/podinfo-ks.yaml
 
-# Generate a Flamingo application to visualize the podinfo-ks objects.
+# Generate a Flamingo application to visualize the podinfo-ks objects. (You can also add --export flag to generate the yaml files and push that to git)
 flamingo generate-app \
   --app-name=podinfo-ks \
   -n podinfo-kustomize ks/podinfo
