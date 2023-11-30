@@ -19,8 +19,7 @@ brew install kind
 # Install Flux CLI 
 brew install fluxcd/tap/flux
 
-# install Flamingo CLI 
-# with Homebrew
+# install Flamingo CLI
 brew install flux-subsystem-argo/tap/flamingo
 
 ```
@@ -43,18 +42,7 @@ kubectl get pods -A
 
 ```
 
-## Step 3: Access Flamingo UI
-
-``` bash
-# Like a normal Argo CD instance, please firstly obtain the initial password by running the following command to login. The default username is admin.
-flamingo show-init-password
-
-# Portforward to http://localhost:8080
-kubectl -n argocd port-forward svc/argocd-server 8080:443
-
-```
-
-## Step 4: Install Terraform Controller
+## Step 3: Install Terraform Controller CRDs
 
 The Weave GitOps Terraform Controller is a reliable controller for Flux to reconcile Terraform resources in the GitOps way. On the next steps we will be installing the controller CRDs so that we can then deploy our terraform resources.
 
@@ -68,6 +56,17 @@ helm upgrade -i tf-controller tf-controller/tf-controller \
 
 # Verify our pods are running correctly
 kubectl get pods -n flux-system
+
+```
+
+## Step 4: Access Flamingo UI
+
+``` bash
+# Like a normal Argo CD instance, please firstly obtain the initial password by running the following command to login. The default username is admin.
+flamingo show-init-password
+
+# Portforward to http://localhost:8080
+kubectl -n argocd port-forward svc/argocd-server 8080:443
 
 ```
 
